@@ -1,0 +1,36 @@
+version: '3.8'
+
+# importan is the network_mode
+
+services:
+
+  prometheus:
+    image: docker.io/prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    network_mode: host
+    ports:
+      - 9090:9090
+
+
+# podman run -d \
+#   --network=host \
+#   --name=grafana \
+#   -e "GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource" \
+#   docker.io/grafana/grafana 
+#
+
+  grafana:
+
+    image: docker.io/grafana/grafana
+    container_name: grafana
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning        
+    network_mode: host
+    ports:
+        - 3000:3000
